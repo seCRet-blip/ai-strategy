@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\ChessPiece.cs" />
      <Compile Include="Assets\Scripts\MoveHeuristic.cs" />
      <Compile Include="Assets\Scripts\MoveData.cs" />
+     <Compile Include="Assets\Scripts\Minimax.cs" />
      <Compile Include="Assets\Scripts\TileData.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
  <Reference Include="UnityEngine">

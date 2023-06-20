@@ -138,63 +138,81 @@ public MoveData GetMove()
     Debug.Log(count);
     return bestMove;
 } 
-
 int CalculateMinMax(int depth, int alpha, int beta, bool max)
-{
-    count++;
-    GetBoardState();
-
-    if (depth == 0)        
-        return Evaluate();
-
-    if (max)
     {
+        count++;
+
  
-        List<MoveData> allMoves = GetMoves(gameManager.playerTurn);
-        allMoves = Shuffle(allMoves);
-        foreach (MoveData move in allMoves)
+
+        GetBoardState();
+
+ 
+
+        if (depth == 0)
+            return Evaluate();
+
+ 
+
+        if (max)
         {
-            moveStack.Push(move);
+            List<MoveData> allMoves = GetMoves(gameManager.playerTurn);
+            foreach (MoveData move in allMoves)
+            {
+                moveStack.Push(move);
 
-            DoFakeMove(move.firstPosition, move.secondPosition);
-            int score = CalculateMinMax(depth - 1, int.MinValue , int.MaxValue, false);
-            UndoFakeMove();            
-if (score > alpha)
-{
-    alpha = score;
-    move.score = score;
+ 
 
-    if (score > bestMove.score && depth == maxDepth)                                                                
-        bestMove = move;                                                            
-}
-                if (score >= beta)                
-                break;
-                if (score <= alpha)                
-                break; 
+                DoFakeMove(move.firstPosition, move.secondPosition);
+                int score = CalculateMinMax(depth - 1, alpha, beta, false);
+                UndoFakeMove();
 
+ 
+
+                if (score > alpha)
+                {
+                    alpha = score;
+                    move.score = score;
+
+ 
+
+                    if (score > bestMove.score && depth == maxDepth)
+                        bestMove = move;
+                }
+
+ 
+
+                if (score >= beta)
+                    break;
+            }
+            return alpha;
         }
-        return alpha;
-    }
-    else
-    {
-        PlayerTeam opponent = gameManager.playerTurn == PlayerTeam.WHITE ? PlayerTeam.BLACK : PlayerTeam.WHITE;
-     
-        List<MoveData> allMoves = GetMoves(opponent);
-        allMoves = Shuffle(allMoves);
-        foreach (MoveData move in allMoves)
+        else
         {
-            moveStack.Push(move);
+            PlayerTeam opponent = gameManager.playerTurn == PlayerTeam.WHITE ? PlayerTeam.BLACK : PlayerTeam.WHITE;
+            List<MoveData> allMoves = GetMoves(opponent);
+            foreach (MoveData move in allMoves)
+            {
+                moveStack.Push(move);
 
-            DoFakeMove(move.firstPosition, move.secondPosition);
-            int score = CalculateMinMax(depth - 1, int.MinValue , int.MaxValue ,true);
-            UndoFakeMove();
-            if (score < beta)                
-            beta = score;                       
+ 
+
+                DoFakeMove(move.firstPosition, move.secondPosition);
+                int score = CalculateMinMax(depth - 1, alpha, beta, true);
+                UndoFakeMove();
+
+ 
+
+                if (score < beta)
+                    beta = score;
+
+ 
+
+                if (score <= alpha)
+                    break;
+            }
+            return beta;
         }
-        return beta;
     }
-}
-
 public List<T> Shuffle<T>(List<T> list)  
 {  
     int n = list.Count;  
